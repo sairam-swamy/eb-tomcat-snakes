@@ -24,6 +24,17 @@ jobs:
           java-version: '8'
           distribution: 'temurin' # Uses Temurin (Adoptium) which supports Java 8
 
+      - name: Download missing log4j-core JAR
+        run: |
+          mkdir -p src/WEB-INF/lib
+          curl -sS -o src/WEB-INF/lib/log4j-core-2.20.0.jar \
+            https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-core/2.20.0/log4j-core-2.20.0.jar
+
+      - name: Build WAR File
+        run: |
+          chmod +x build.sh
+          ./build.sh
+
       - name: Make build script executable and run it
         run: |
           chmod +x ./build.sh
