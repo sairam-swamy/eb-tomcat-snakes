@@ -27,13 +27,14 @@
 
 cd src
 mkdir -p WEB-INF/classes
-mkdir -p WEB-INF/lib
 
-# Ensure any duplicate or old log4j-core versions are removed
-rm -f WEB-INF/lib/log4j-core-2.20.0.jar
+# Ensure servlet-api and container JARs are NOT packaged inside WEB-INF/lib
+rm -f WEB-INF/lib/servlet-api.jar
+rm -f WEB-INF/lib/jsp-api.jar
+rm -f WEB-INF/lib/jasper.jar
 
 echo .
-javac -d WEB-INF/classes com/snakes/model/Media.java
+javac -classpath "WEB-INF/lib/*:WEB-INF/classes" -d WEB-INF/classes com/snakes/model/Media.java
 echo .
 javac -classpath "WEB-INF/lib/*:WEB-INF/classes" -d WEB-INF/classes com/snakes/model/Movie.java
 echo .
@@ -43,6 +44,7 @@ javac -classpath "WEB-INF/lib/*:WEB-INF/classes" -d WEB-INF/classes com/snakes/w
 echo .
 javac -classpath "WEB-INF/lib/*:WEB-INF/classes" -d WEB-INF/classes com/snakes/web/SearchMovies.java
 echo .
+
 if [ -d ".ebextensions/httpd/conf.d" ]; then
   jar -cf ROOT.war *.jsp images css js WEB-INF .ebextensions/*.config .ebextensions/*.json .ebextensions/httpd/conf.d/*.conf
 else
