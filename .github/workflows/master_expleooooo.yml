@@ -76,7 +76,7 @@ name: Build and Deploy Java Web App to Azure
 on:
   push:
     branches:
-      - master      # Change to 'main' if your primary branch is main
+      - master      # Change to 'main' if your primary branch name is main
   workflow_dispatch:
 
 jobs:
@@ -88,7 +88,7 @@ jobs:
       - name: Checkout Source Code
         uses: actions/checkout@v4
 
-      # 2. Set up JDK 8 (or 11/17 depending on your project settings)
+      # 2. Set up Java JDK 8
       - name: Set up Java JDK
         uses: actions/setup-java@v4
         with:
@@ -96,21 +96,16 @@ jobs:
           java-version: '8'
           cache: 'maven'
 
-      # 3. Build WAR file using Maven
+      # 3. Clean and build ROOT.war using Maven
       - name: Build with Maven
         run: mvn clean package -DskipTests
 
-      # 4. Rename built WAR to ROOT.war for deployment
-      - name: Rename WAR to ROOT.war
-        run: |
-          mv target/*.war ROOT.war
-
-      # 5. Package ROOT.war into a ZIP for OneDeploy API compatibility
+      # 4. Zip target/ROOT.war into deploy.zip for OneDeploy API compatibility
       - name: Prepare Deployment Package
         run: |
-          zip deploy.zip ROOT.war
+          zip deploy.zip target/ROOT.war
 
-      # 6. Deploy to Azure App Service
+      # 5. Deploy to Azure App Service
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
@@ -119,4 +114,3 @@ jobs:
           package: 'deploy.zip'
           target-path: 'webapps'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_407E13E2C9944DC99FACC404B2A51631 }}
-
