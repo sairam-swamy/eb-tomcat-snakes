@@ -52,5 +52,6 @@ jobs:
         with:
           app-name: 'expleooooo'
           slot-name: 'Production'
-          package: '*.war'
+          package: '${{ github.workspace }}/ROOT.war'
+          target-path: 'webapps/ROOT.war' # Explicitly
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_407E13E2C9944DC99FACC404B2A51631 }}
