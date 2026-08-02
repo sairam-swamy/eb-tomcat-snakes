@@ -29,18 +29,12 @@ jobs:
           chmod +x ./build.sh
           ./build.sh
 
-      # Debug step: inspect target folder to confirm WAR creation
-      - name: Verify build output
-        run: |
-          echo "=== Checking target directory ==="
-          ls -la target/ || ls -la
-
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: java-app
-          path: '${{ github.workspace }}/target/*.war'
-          if-no-files-found: error # Fails early in build step if no WAR file was created
+          path: '${{ github.workspace }}/*.war' # Searches root directory where ROOT.war is generated
+          if-no-files-found: error
 
   deploy:
     runs-on: ubuntu-latest
